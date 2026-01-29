@@ -2,51 +2,31 @@
 session_start();
 
 require_once __DIR__ . '/../src/Core/Autoloader.php';
+require_once __DIR__ . '/../src/Core/Functions.php';
+
 use App\Core\Autoloader;
+use App\Core\Router;
 use App\Controller\ShopController;
 use App\Controller\AuthController;
 use App\Controller\AdminController;
-// use App\Controller\HomeController; // On le créera après
 
 Autoloader::register();
-$page = $_GET['page'] ?? 'home';
 
-switch ($page) {
-    case 'boutique':
-        $controller = new ShopController();
-        $controller->index();
-        break;
+$router = new Router();
 
-    case 'home':
-        echo "<h1>Bienvenue sur l'accueil (En construction)</h1>";
-        echo "<a href='index.php?page=boutique'>Aller à la boutique</a>";
-        break;
+$router->add('home', function() {
+    header('Location: index.php?page=boutique');
+    exit;
+});
 
-    case 'login':
-        (new AuthController())->login();
-        break;
+$router->add('boutique', [ShopController::class, 'index']);
+$router->add('login',    [AuthController::class, 'login']);
+$router->add('register', [AuthController::class, 'register']);
+$router->add('logout',   [AuthController::class, 'logout']);
 
-    case 'register':
-        (new AuthController())->register();
-        break;
+$router->add('admin',        [AdminController::class, 'index']);
+$router->add('admin_add',    [AdminController::class, 'add']);
+$router->add('admin_edit',   [AdminController::class, 'edit']);
+$router->add('admin_delete', [AdminController::class, 'delete']);
 
-    case 'logout':
-        (new AuthController())->logout();
-        break;
-
-    case 'admin':
-        (new AdminController())->index();
-        break;
-
-    case 'admin_add':
-        (new AdminController())->add();
-        break;
-
-    case 'admin_delete':
-        (new AdminController())->delete();
-        break;
-
-    default:
-        echo "404 - Page introuvable";
-        break;
-}
+$router->run();

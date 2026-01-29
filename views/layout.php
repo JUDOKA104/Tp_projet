@@ -3,41 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cubic Market</title>
+    <title>Cubic Market - La Boutique</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="index.php?page=home">🟦 Cubic Market</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="index.php?page=boutique">Boutique</a></li>
+        <a class="navbar-brand" href="index.php?page=home">
+            <span style="color: var(--mc-gold);">>_</span> CUBIC MARKET
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link" href="index.php?page=boutique">🛒 Boutique</a></li>
 
                 <?php if (isset($_SESSION['user'])): ?>
-                    <li class="nav-item">
-                        <span class="nav-link text-white">👤 <?= $_SESSION['user']['pseudo'] ?></span>
+                    <li class="nav-item mx-2">
+                        <span class="nav-link text-white border border-secondary px-3 rounded bg-dark">
+                            <img src="https://mc-heads.net/avatar/<?= e($_SESSION['user']['pseudo']) ?>/24" alt="">
+                            <?= e($_SESSION['user']['pseudo']) ?>
+                        </span>
                     </li>
                     <?php if ($_SESSION['user']['role'] === 'ADMIN'): ?>
-                        <li class="nav-item"><a class="nav-link text-warning" href="index.php?page=admin">Administration</a></li>
+                        <li class="nav-item"><a class="nav-link text-warning" href="index.php?page=admin">⚙️ Admin</a></li>
                     <?php endif; ?>
                     <li class="nav-item"><a class="nav-link text-danger" href="index.php?page=logout">Déconnexion</a></li>
 
                 <?php else: ?>
                     <li class="nav-item"><a class="nav-link" href="index.php?page=login">Connexion</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?page=register">Inscription</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-light ms-2" href="index.php?page=register">Inscription</a></li>
                 <?php endif; ?>
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="container">
-    <?= $content ?>
+<div style="margin-top: 100px; min-height: 80vh;">
+    <div class="container">
+        <?= $content ?>
+    </div>
 </div>
 
-<footer class="text-center mt-5 py-3 text-muted">
-    &copy; 2026 Cubic Market - Projet PHP POO
+<footer class="text-center mt-5 py-4">
+    <div class="container">
+        <p class="mb-0">&copy; 2026 CUBIC MARKET. NOT AFFILIATED WITH MOJANG AB.</p>
+    </div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

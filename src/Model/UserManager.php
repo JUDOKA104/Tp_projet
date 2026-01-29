@@ -23,7 +23,9 @@ class UserManager
         if (!$data) return null;
 
         $user = new User($data['pseudo'], $data['email'], $data['password']);
+        $user->setId((int)$data['id']);
         $user->setRole($data['role']);
+
         return $user;
     }
 

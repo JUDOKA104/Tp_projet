@@ -5,7 +5,7 @@ use App\Model\ProductManager;
 
 class ShopController extends AbstractController
 {
-    public function index()
+    public function index(): void
     {
         $productManager = new ProductManager();
         $products = $productManager->findAll();

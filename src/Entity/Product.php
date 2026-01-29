@@ -4,19 +4,17 @@ namespace App\Entity;
 abstract class Product
 {
     protected ?int $id = null;
-    protected string $name;
     protected ?string $description = null;
-    protected float $price;
     protected ?string $image = null;
     protected string $category;
 
-    public function __construct(string $name, float $price)
-    {
-        $this->name = $name;
-        $this->price = $price;
-    }
+    public function __construct(
+        protected string $name,
+        protected float $price
+    ) {}
 
     public function getId(): ?int { return $this->id; }
+    public function setId(int $id): self { $this->id = $id; return $this; }
 
     public function getName(): string { return $this->name; }
     public function setName(string $name): self { $this->name = $name; return $this; }

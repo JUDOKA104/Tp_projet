@@ -11,22 +11,19 @@ class Database
     public static function getConnection(): PDO
     {
         if (self::$instance === null) {
-            $host = 'localhost';
-            $port = '5432';
-            $db   = 'Tp_projet';
-            $user = 'postgres';
-            $pass = 'root';
+            $config = require __DIR__ . '/../../config/db.php';
 
-            $dsn = "pgsql:host=$host;port=$port;dbname=$db";
+            $dsn = "pgsql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
 
             try {
-                self::$instance = new PDO($dsn, $user, $pass, [
+                self::$instance = new PDO($dsn, $config['user'], $config['password'], [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES => false,
                 ]);
             } catch (PDOException $e) {
-                die("Erreur de connexion BDD : " . $e->getMessage());
+                error_log($e->getMessage());
+                die("Erreur technique, veuillez réessayer plus tard.");
             }
         }
         return self::$instance;
