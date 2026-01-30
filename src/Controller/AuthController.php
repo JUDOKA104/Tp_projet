@@ -9,25 +9,27 @@ class AuthController extends AbstractController
     public function register(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!verifyCsrfToken($_POST['csrf_token'] ?? null)) {
+                die("Erreur CSRF");
+            }
+
             $pseudo = trim($_POST['pseudo'] ?? '');
             $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
             $password = $_POST['password'] ?? '';
 
             if (!empty($pseudo) && !empty($email) && !empty($password)) {
                 $user = new User($pseudo, $email, $password);
-
                 $manager = new UserManager();
-                try {
-                    if ($manager->save($user)) {
-                        $this->redirect('index.php?page=login');
-                        return;
-                    }
-                } catch (\Exception $e) {
-                    echo "Erreur lors de l'inscription (Email peut-être déjà pris).";
+
+                if ($manager->save($user)) {
+                    $this->addFlash('success', 'Compte créé ! Connectez-vous.');
+                    $this->redirect('index.php?page=login');
+                    return;
+                } else {
+                    $this->addFlash('danger', 'Cet email est déjà utilisé.');
                 }
             }
         }
-
         $this->render('auth/register');
     }
 
@@ -36,6 +38,10 @@ class AuthController extends AbstractController
         $error = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!verifyCsrfToken($_POST['csrf_token'] ?? null)) {
+                die("Erreur CSRF");
+            }
+
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
 
@@ -43,21 +49,20 @@ class AuthController extends AbstractController
             $user = $manager->findByEmail($email);
 
             if ($user && password_verify($password, $user->getPassword())) {
-                session_regenerate_id(true);
-
+                session_regenerate_id(true); // Sécurité anti-fixation de session
                 $_SESSION['user'] = [
                     'id' => $user->getId(),
                     'pseudo' => $user->getPseudo(),
                     'role' => $user->getRole()
                 ];
 
+                $this->addFlash('success', "Bon retour, " . $user->getPseudo());
                 $this->redirect('index.php?page=boutique');
                 return;
             } else {
                 $error = "Identifiants incorrects !";
             }
         }
-
         $this->render('auth/login', ['error' => $error]);
     }
 

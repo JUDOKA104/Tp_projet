@@ -44,6 +44,15 @@
 
 <div style="margin-top: 100px; min-height: 80vh;">
     <div class="container">
+        <?php if (!empty($_SESSION['flash'])): ?>
+            <div class="alert alert-<?= $_SESSION['flash']['type'] ?> alert-dismissible fade show border-0 bg-opacity-75" role="alert"
+                 style="background-color: var(--mc-panel); color: white; border-left: 5px solid var(--mc-gold) !important;">
+                <strong>Notification:</strong> <?= $_SESSION['flash']['message'] ?>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            </div>
+            <?php unset($_SESSION['flash']); ?>
+        <?php endif; ?>
+
         <?= $content ?>
     </div>
 </div>

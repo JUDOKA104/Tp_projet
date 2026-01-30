@@ -1,6 +1,6 @@
 <div class="row justify-content-center">
-    <div class="col-md-9"> <div class="card-custom p-5">
-
+    <div class="col-md-9">
+        <div class="card-custom p-5">
             <div class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom border-secondary">
                 <div>
                     <h6 class="text-muted text-uppercase mb-1">Back Office</h6>
@@ -12,6 +12,8 @@
             </div>
 
             <form action="index.php?page=admin_edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
+
                 <input type="hidden" name="id" value="<?= $product->getId() ?>">
 
                 <div class="row g-4">
@@ -45,10 +47,6 @@
                             <h4 class="text-danger mb-4" style="font-family: 'VT323';">> STATISTIQUES OFFENSIVES</h4>
 
                             <div class="row g-3">
-                                <div class="col-6">
-                                    <label class="gaming-label">⚔️ Dégâts</label>
-                                    <input type="text" name="weapon_damage" value="<?= e($data['damage'] ?? '') ?>" class="form-control input-gaming" placeholder="+10">
-                                </div>
                                 <div class="col-12">
                                     <label class="gaming-label">✨ Enchantements</label>
                                     <?php $enchantsStr = !empty($data['enchants']) ? implode(', ', $data['enchants']) : ''; ?>

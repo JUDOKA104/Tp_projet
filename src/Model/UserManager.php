@@ -31,8 +31,15 @@ class UserManager
 
     public function save(User $user): bool
     {
-        $hashedPassword = password_hash($user->getPassword(), PASSWORD_DEFAULT);
+        // 1. Vérification si l'email existe déjà
+        $check = $this->pdo->prepare("SELECT id FROM users WHERE email = ?");
+        $check->execute([$user->getEmail()]);
+        if ($check->fetch()) {
+            return false; // Email déjà pris
+        }
 
+        // 2. Hashage et Insertion
+        $hashedPassword = password_hash($user->getPassword(), PASSWORD_DEFAULT);
         $sql = "INSERT INTO users (pseudo, email, password, role) 
                 VALUES (:pseudo, :email, :pass, :role)";
 

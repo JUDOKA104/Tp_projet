@@ -21,4 +21,14 @@ abstract class AbstractController
         header("Location: $url");
         exit;
     }
+
+    /**
+     * Ajoute un message flash en session
+     * @param string $type (success, danger, warning, info)
+     * @param string $message Le texte à afficher
+     */
+    protected function addFlash(string $type, string $message): void
+    {
+        $_SESSION['flash'] = ['type' => $type, 'message' => $message];
+    }
 }

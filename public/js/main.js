@@ -41,17 +41,6 @@ function initShopFilters() {
     });
 }
 
-function initDeleteConfirmations() {
-    const deleteForms = document.querySelectorAll('form[action*="delete"]');
-    deleteForms.forEach(form => {
-        form.addEventListener('submit', (e) => {
-            if (!confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) {
-                e.preventDefault();
-            }
-        });
-    });
-}
-
 function previewFile() {
     const preview = document.getElementById('imgPreview');
     const file = document.getElementById('fileUpload').files[0];

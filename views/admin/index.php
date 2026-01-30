@@ -2,15 +2,16 @@
     <h2 class="mb-0" style="color: var(--mc-gold); text-shadow: 2px 2px 0 #000; font-family: 'VT323', monospace; font-size: 2.5rem;">
         🛠️ PANEL ADMINISTRATEUR
     </h2>
-    <span class="badge bg-dark border border-secondary text-muted">V 1.0.2</span>
+    <span class="badge bg-dark border border-secondary text-muted">V 2.0 (Secured)</span>
 </div>
 
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-5 mb-4">
         <div class="card-custom p-4 h-100">
             <h4 class="text-info mb-4" style="font-family: 'VT323'; letter-spacing: 1px;">> AJOUTER UN ITEM</h4>
 
             <form action="index.php?page=admin_add" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
 
                 <div class="mb-3">
                     <label class="gaming-label">Type de produit</label>
@@ -122,7 +123,7 @@
         </div>
     </div>
 
-    <div class="col-md-7">
+    <div class="col-md-7 mb-4">
         <div class="card-custom p-4 h-100">
             <h4 class="text-info mb-3" style="font-family: 'VT323'; letter-spacing: 1px;">📦 INVENTAIRE SERVEUR</h4>
             <div class="table-responsive">
@@ -181,6 +182,8 @@
             <div class="modal-footer border-top border-secondary justify-content-center">
                 <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">ANNULER</button>
                 <form action="index.php?page=admin_delete" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
+
                     <input type="hidden" name="id" id="deleteItemId" value="">
                     <button type="submit" class="btn btn-danger fw-bold">SUPPRIMER DÉFINITIVEMENT</button>
                 </form>
