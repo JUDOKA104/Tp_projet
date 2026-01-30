@@ -43,13 +43,23 @@ class AuthController extends AbstractController
             }
 
             $email = $_POST['email'] ?? '';
-            $password = $_POST['password'] ?? '';
+            $passwordInput = $_POST['password'] ?? '';
 
             $manager = new UserManager();
             $user = $manager->findByEmail($email);
 
-            if ($user && password_verify($password, $user->getPassword())) {
-                session_regenerate_id(true); // Sécurité anti-fixation de session
+            // --- RECONSTRUCTION DU POIVRE ---
+
+            $secretKey = "CubicInfrastructure_Super_Secret_Key_!2026";
+            $hashedKey = hash('sha256', $secretKey);
+
+            // Concaténation
+            $passwordToVerify = $passwordInput . $hashedKey;
+
+            // password_verify va comparer ce gros bloc avec le hash Argon2 stocké en BDD
+            if ($user && password_verify($passwordToVerify, $user->getPassword())) {
+
+                session_regenerate_id(true);
                 $_SESSION['user'] = [
                     'id' => $user->getId(),
                     'pseudo' => $user->getPseudo(),
