@@ -23,10 +23,10 @@
 
                 <?php if (isset($_SESSION['user'])): ?>
                     <li class="nav-item mx-2">
-                        <span class="nav-link text-white border border-secondary px-3 rounded bg-dark">
-                            <img src="https://mc-heads.net/avatar/<?= e($_SESSION['user']['pseudo']) ?>/24" alt="">
+                        <a href="index.php?page=profile" class="nav-link text-white border border-secondary px-3 rounded bg-dark text-decoration-none">
+                            <img src="https://mc-heads.net/avatar/<?= e($_SESSION['user']['pseudo']) ?>/24" alt="" class="me-1">
                             <?= e($_SESSION['user']['pseudo']) ?>
-                        </span>
+                        </a>
                     </li>
                     <?php if ($_SESSION['user']['role'] === 'ADMIN'): ?>
                         <li class="nav-item"><a class="nav-link text-warning" href="index.php?page=admin">⚙️ Admin</a></li>

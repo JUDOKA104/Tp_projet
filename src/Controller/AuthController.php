@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Model\UserManager;
 use App\Entity\User;
+use App\Model\ProductManager;
 
 class AuthController extends AbstractController
 {
@@ -74,6 +75,30 @@ class AuthController extends AbstractController
             }
         }
         $this->render('auth/login', ['error' => $error]);
+    }
+
+    public function profile(): void
+    {
+        // Sécurité : Être connecté
+        if (empty($_SESSION['user'])) {
+            $this->redirect('index.php?page=login');
+        }
+
+        $userId = (int)$_SESSION['user']['id'];
+        $role = $_SESSION['user']['role'];
+        $myProducts = [];
+
+        // Logique "Admin possède tout" vs "User possède son inventaire"
+        if ($role === 'ADMIN') {
+            $myProducts = (new ProductManager())->findAll(); // L'admin voit tout le catalogue
+        } else {
+            $myProducts = (new UserManager())->getInventory($userId); // Le user voit ses achats
+        }
+
+        $this->render('auth/profile', [
+            'user' => $_SESSION['user'],
+            'products' => $myProducts
+        ]);
     }
 
     public function logout(): void

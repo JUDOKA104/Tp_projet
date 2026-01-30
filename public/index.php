@@ -20,8 +20,10 @@ $router->add('home', function() {
 });
 
 $router->add('boutique', [ShopController::class, 'index']);
+$router->add('buy',      [ShopController::class, 'buy']);
 $router->add('login',    [AuthController::class, 'login']);
 $router->add('register', [AuthController::class, 'register']);
+$router->add('profile', [AuthController::class, 'profile']);
 $router->add('logout',   [AuthController::class, 'logout']);
 
 $router->add('admin',        [AdminController::class, 'index']);

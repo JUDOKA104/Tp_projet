@@ -2,7 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initShopFilters();
-    initDeleteConfirmations();
 });
 
 function initShopFilters() {
@@ -91,5 +90,28 @@ function openDeleteModal(id, name) {
     document.getElementById('deleteItemId').value = id;
     document.getElementById('deleteItemName').innerText = name;
     var myModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    myModal.show();
+}
+
+function togglePaymentFields() {
+    const method = document.getElementById('methodSelector').value;
+    const cardFields = document.getElementById('cardFields');
+    const paypalFields = document.getElementById('paypalFields');
+
+    if (method === 'card') {
+        cardFields.style.display = 'block';
+        paypalFields.style.display = 'none';
+    } else {
+        cardFields.style.display = 'none';
+        paypalFields.style.display = 'block';
+    }
+}
+
+function openPaymentModal(id, name, price) {
+    document.getElementById('modalProductId').value = id;
+    document.getElementById('modalProductName').innerText = name;
+    document.getElementById('modalProductPrice').innerText = price + ' €';
+
+    var myModal = new bootstrap.Modal(document.getElementById('paymentModal'));
     myModal.show();
 }

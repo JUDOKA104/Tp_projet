@@ -4,6 +4,9 @@ namespace App\Model;
 use App\Core\Database;
 use App\Entity\User;
 use PDO;
+use App\Entity\Product;
+use App\Entity\Weapon;
+use App\Entity\Rank;
 
 class UserManager
 {
@@ -70,5 +73,53 @@ class UserManager
             'pass'   => $finalHash, // Hash Argon2id stocké
             'role'   => $user->getRole()
         ]);
+    }
+
+    /**
+     * Ajoute un produit à l'inventaire de l'utilisateur
+     */
+    public function addToInventory(int $userId, int $productId): bool
+    {
+        // On vérifie d'abord si l'utilisateur ne l'a pas déjà (doublon)
+        $check = $this->pdo->prepare("SELECT 1 FROM user_inventory WHERE user_id = ? AND product_id = ?");
+        $check->execute([$userId, $productId]);
+        if ($check->fetch()) {
+            return true; // Il l'a déjà, on considère que c'est bon
+        }
+
+        $stmt = $this->pdo->prepare("INSERT INTO user_inventory (user_id, product_id) VALUES (?, ?)");
+        return $stmt->execute([$userId, $productId]);
+    }
+
+    /**
+     * Récupère tous les produits possédés par un utilisateur
+     * @return Product[]
+     */
+    public function getInventory(int $userId): array
+    {
+        $sql = "SELECT p.* FROM products p 
+                JOIN user_inventory ui ON p.id = ui.product_id 
+                WHERE ui.user_id = :uid 
+                ORDER BY ui.purchase_date DESC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['uid' => $userId]);
+
+        $products = [];
+        foreach ($stmt->fetchAll() as $data) {
+            // On réutilise la logique de mapping (similaire à ProductManager)
+            $item = match ($data['category']) {
+                'Arme' => new Weapon($data['name'], (float)$data['price']),
+                'Grade' => new Rank($data['name'], (float)$data['price']),
+                default => null
+            };
+            if ($item) {
+                $item->setId((int)$data['id']);
+                $item->setDescription($data['description']);
+                $item->setImage($data['image']);
+                $products[] = $item;
+            }
+        }
+        return $products;
     }
 }
